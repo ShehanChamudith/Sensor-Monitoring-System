@@ -4,6 +4,8 @@ import { BrowserRouter as Router, Route, Routes, Link, Navigate } from "react-ro
 import { AppBar, Toolbar, Typography, Button, IconButton, Menu, MenuItem, Container, Popover, Paper } from "@mui/material";
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import Dashboard from "./components/Dashboard";
+import Mainpage from './Pages/mainpage';
+import Loginpage from './Pages/login';
 
 const App = () => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -19,7 +21,7 @@ const App = () => {
   return (
     <Router>
       <div>
-        <AppBar position="static" sx={{ backgroundColor: "#0C1844" }}>
+        {/* <AppBar position="static" sx={{ backgroundColor: "#0C1844" }}>
           <Toolbar>
             <Typography variant="h6" sx={{ flexGrow: 1 }}>
               Sensor Monitoring System
@@ -53,12 +55,15 @@ const App = () => {
               Sensors
             </Button>
           </Toolbar>
-        </AppBar>
+        </AppBar> */}
 
         
           <Routes>
-            <Route path="/" element={<Navigate to="/dashboard" />} />
-            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/" element={<Navigate to="/login" />} />
+            <Route path="/login" element={<Loginpage />} />
+            <Route path="/dashboard" element={<Mainpage />} />
+            <Route path="/test" element={<Dashboard />} />
+
           </Routes>
         
       </div>
