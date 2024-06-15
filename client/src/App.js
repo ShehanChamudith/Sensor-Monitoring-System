@@ -1,11 +1,9 @@
 import React, { useState } from "react";
+
 import { BrowserRouter as Router, Route, Routes, Link, Navigate } from "react-router-dom";
-import { AppBar, Toolbar, Typography, Button, IconButton, Menu, MenuItem, Container } from "@mui/material";
+import { AppBar, Toolbar, Typography, Button, IconButton, Menu, MenuItem, Container, Popover, Paper } from "@mui/material";
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import Dashboard from "./components/Dashboard";
-// import Sensors from "./components/Sensors";
-// import SensorDetails from "./components/SensorDetails";
-// import Settings from "./components/Settings";
 
 const App = () => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -29,37 +27,40 @@ const App = () => {
             <IconButton color="inherit" onClick={handleNotificationClick}>
               <NotificationsIcon />
             </IconButton>
-            <Menu
-              anchorEl={anchorEl}
+            <Popover
               open={Boolean(anchorEl)}
+              anchorEl={anchorEl}
               onClose={handleNotificationClose}
-              keepMounted
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'right',
+              }}
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
             >
-              <MenuItem onClick={handleNotificationClose}>Notification 1</MenuItem>
-              <MenuItem onClick={handleNotificationClose}>Notification 2</MenuItem>
-              <MenuItem onClick={handleNotificationClose}>Notification 3</MenuItem>
-            </Menu>
+              <Paper>
+                <MenuItem onClick={handleNotificationClose}>Notification 1</MenuItem>
+                <MenuItem onClick={handleNotificationClose}>Notification 2</MenuItem>
+                <MenuItem onClick={handleNotificationClose}>Notification 3</MenuItem>
+              </Paper>
+            </Popover>
             <Button color="inherit" component={Link} to="/dashboard">
               Dashboard
             </Button>
             <Button color="inherit" component={Link} to="/sensors">
               Sensors
             </Button>
-            <Button color="inherit" component={Link} to="/settings">
-              Settings
-            </Button>
           </Toolbar>
         </AppBar>
 
-        <Container sx={{ mt: 4 }}>
+        
           <Routes>
             <Route path="/" element={<Navigate to="/dashboard" />} />
             <Route path="/dashboard" element={<Dashboard />} />
-            {/* <Route path="/sensors" element={<Sensors />} />
-            <Route path="/sensors/:id" element={<SensorDetails />} />
-            <Route path="/settings" element={<Settings />} /> */}
           </Routes>
-        </Container>
+        
       </div>
     </Router>
   );
