@@ -23,7 +23,7 @@ const MainPage = () => {
     const [isRead, serIsRead] = useState(false);
     const [notificationpanel, setNotificationPanel] = useState();
     const [instantNote, setInstantNote] = useState({});
-    const [sensorValues, setSensorValues] = useState({});
+    const [sensorValues, setSensorValues] = useState([]);
 
     //websocket service----------------------------------------------
 
@@ -31,20 +31,20 @@ const MainPage = () => {
     let stompClient2 = null;
 
     const connect = () => {
-        // const socket = new SockJS('http://localhost:8080/notifications');
-        // stompClient = Stomp.over(socket);
+        const socket = new SockJS('http://localhost:8080/notifications');
+        stompClient = Stomp.over(socket);
 
         const dataSocket = new SockJS('http://localhost:8080/sensor-data');
         stompClient2 = Stomp.over(dataSocket);
 
-        // stompClient.connect({}, () => {
-        //     console.log('Connected to WebSocket');
-        //     stompClient.subscribe('/topic/notifications', (message) => {
-        //         setInstantNote(message.body);
-        //         console.log(instantNote)
-        //         //callback(JSON.parse(message.body));
-        //     })
-        // });
+        stompClient.connect({}, () => {
+            console.log('Connected to WebSocket');
+            stompClient.subscribe('/topic/notifications', (message) => {
+                setInstantNote(message.body);
+                console.log(instantNote)
+                //callback(JSON.parse(message.body));
+            })
+        });
 
         stompClient2.connect({}, () => {
             console.log('Connected to WebSocket');
