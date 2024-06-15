@@ -32,7 +32,6 @@ const MainPage = () => {
                             </div>
                         </div>
                     </div>
-
                     <div className='w-full mt-16'>
                         <div className='flex justify-center'>
                             <div className='w-full'>
