@@ -5,6 +5,7 @@
 @tailwind utilities;
 
 body {
+    height: 100vh;
     overflow-x: hidden; /* Hide horizontal overflow */
     overflow-y: hidden; /* Hide vertical overflow */
   }

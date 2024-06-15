@@ -5,11 +5,23 @@ const generateRandomData = (length) => {
     const data = [];
     for (let i = 0; i < length; i++) {
         const randomValue = (Math.random() * (37.5 - 27.0) + 27.0).toFixed(1); // Generate random value between 27.0 and 37.5
-        data.push({ name: `Point ${i + 1}`, value: parseFloat(randomValue) });
+        data.push({ name: getCurrentTime(), value: parseFloat(randomValue) });
     }
-    //console.log(data);
     return data;
 };
+
+function getCurrentTime() {
+    const date = new Date();
+    let hours = date.getHours();
+    let minutes = date.getMinutes();
+    let seconds = date.getSeconds();
+
+    hours = hours < 10 ? `0${hours}` : hours;
+    minutes = minutes < 10 ? `0${minutes}` : minutes;
+    seconds = seconds < 10 ? `0${seconds}` : seconds;
+
+    return `${hours}:${minutes}:${seconds}`;
+  }
 
 
 const RealTimeLineChart = () => {
@@ -28,8 +40,8 @@ const RealTimeLineChart = () => {
 
     useEffect(() => {
         const interval = setInterval(() => {
-            setData((prevData) => [...prevData.slice(1), { name: `Point ${prevData.length + 1}`, value: resetfunction() }]);
-        }, 1000);
+            setData((prevData) => [...prevData.slice(1), { name: getCurrentTime(), value: resetfunction() }]);
+        }, 2000);
 
         return () => clearInterval(interval);
     }, []);

@@ -33,7 +33,7 @@ const formatDate = () => {
 const FormattedDate = ({ date }) => {
     const formattedDate = formatDate(date);
 
-    return <div className='text-white text-2xl font-bold'>{formattedDate}</div>;
+    return <div className='text-white text-xl font-space-mono'>{formattedDate}</div>;
 };
 
 export default FormattedDate;
