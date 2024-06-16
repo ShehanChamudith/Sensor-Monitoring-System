@@ -1,7 +1,7 @@
 import React from 'react';
 import Temp from '../Assets/temperature.png';
 
-const Alert = ({isRead}) => {
+const Alert = ({isRead,date,time,temp,id}) => {
     return (
         <div className='mb-2 overflow-hidden whitespace-nowrap overflow-ellipsis'>
             <div className={`${isRead ? 'bg-[#ffffff0a]':'bg-[#a41e1e36]'} flex p-3 items-center shadow-inner-custom rounded-lg `} style={{ backdropFilter: 'blur(15px)' }}>

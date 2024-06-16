@@ -8,6 +8,9 @@ import { Button } from "@mui/material";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import axios from 'axios';
+import SockJS from 'sockjs-client';
+import { Stomp } from '@stomp/stompjs';
 
 const theme = createTheme({
     typography: {
@@ -25,6 +28,55 @@ const MainPage = () => {
     const [commands, setCommands] = useState([
         'echo Hello, World!',
     ]);
+    const [notificationpanel, setNotificationPanel] = useState();
+    const [instantNote, setInstantNote] = useState({});
+    const [sensorValues, setSensorValues] = useState([]);
+
+    //websocket service----------------------------------------------
+
+    let stompClient = null;
+    let stompClient2 = null;
+
+    const connect = () => {
+        const socket = new SockJS('http://localhost:8080/notifications');
+        stompClient = Stomp.over(socket);
+
+        const dataSocket = new SockJS('http://localhost:8080/sensor-data');
+        stompClient2 = Stomp.over(dataSocket);
+
+        stompClient.connect({}, () => {
+            console.log('Connected to WebSocket');
+            stompClient.subscribe('/topic/notifications', (message) => {
+                setInstantNote(message.body);
+                console.log(instantNote)
+                //callback(JSON.parse(message.body));
+            })
+        });
+
+        stompClient2.connect({}, () => {
+            console.log('Connected to WebSocket');
+            stompClient2.subscribe('/topic/sensor-data', (message) => {
+                setSensorValues(message.body);
+                console.log(sensorValues)
+                //callback(JSON.parse(message.body));
+            })
+        });
+
+    };
+
+    const sendMessage = (message) => {
+        if (stompClient && stompClient.connected) {
+            stompClient.send('/app/message', {}, JSON.stringify(message));
+        }
+    };
+
+    const disconnect = () => {
+        if (stompClient !== null) {
+            stompClient.disconnect();
+            console.log('Disconnected from WebSocket');
+        }
+    };
+    //----------------------------------------------------------------
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -105,6 +157,39 @@ const MainPage = () => {
                             <div className='shadow-[#f4fdff6f] w-full px-4 py-3 h-[91vh] overflow-y-auto' style={{ backdropFilter: 'blur(10px)', scrollbarWidth: 'none', '-ms-overflow-style': 'none', scrollbarColor: 'transparent transparent' }}>
                                 <Alert isRead={isRead} />
                             </div>
+    //------------------------------------------
+    const [notifications, setNotifications] = useState([]);
+
+    useEffect(() => {
+        connect();
+        axios.get('http://localhost:8080/notifications/all')
+            .then((response) => {
+                setNotifications(response.data);
+                //console.log(response.data);
+            })
+    }, [])
+
+
+    return (
+        <div className='flex-col bg-[#040417] h-[100vh] bg-gradient-to-br from-[#9d00635a] via-[#040417] to-[#290b3a]'>
+            <div className='flex-col h-[100vh]'>
+                <Navbar
+                    toggle={togglePanel}
+                />
+                <>
+                    <div className={`absolute right-0 h-[100vh] ${notificationpanel ? 'w-[25%] items-start' : 'w-0 items-center'} flex flex-col justify-between transition-all duration-500 ease-in-out`}>
+                        <div className='absolute inset-0 bg-[#ffffff10] blur-2xl'></div>
+                        <div className='shadow-[#f4fdff6f] w-full pl-12 pr-3 py-2 h-[91vh] overflow-y-auto' style={{ scrollbarWidth: 'none', '-ms-overflow-style': 'none', scrollbarColor: 'transparent transparent' }}>
+                            {notifications && notifications.map((notification) => (
+                                <Alert
+                                    key={notification._id}
+                                    id={notification.id}
+                                    date={notification.dateReceived}
+                                    time={notification.timeReceived}
+                                    temp={notification.tempValue}
+                                // <Alert isRead={isRead} />
+                                />
+                            ))}
                         </div>
                     </>
 
@@ -160,6 +245,7 @@ const MainPage = () => {
                                             </Button>
                                         </ThemeProvider>
                                     </div>
+
                                 </div>
                             </div>
                         </div>
