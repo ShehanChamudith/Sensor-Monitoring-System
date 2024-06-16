@@ -5,7 +5,7 @@ import { AppBar, Toolbar, Typography, Button, IconButton, Menu, MenuItem, Contai
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import Dashboard from "./components/Dashboard";
 import Mainpage from './Pages/mainpage';
-import Loginpage from './Pages/login';
+import Loginpage from './Pages/Login';
 
 const App = () => {
   const [anchorEl, setAnchorEl] = useState(null);
